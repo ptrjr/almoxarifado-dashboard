@@ -1,0 +1,11 @@
+INSERT INTO filial (nome, cnpj)
+SELECT '01 - JL SOLUÇÕES AMBIENTAIS', '111'
+    WHERE NOT EXISTS (SELECT 1 FROM filial WHERE cnpj = '111');
+
+INSERT INTO filial (nome, cnpj)
+SELECT '02 - LUANA SOLUÇÕES AMBIENTAIS', '222'
+    WHERE NOT EXISTS (SELECT 1 FROM filial WHERE cnpj = '222');
+
+INSERT INTO filial (nome, cnpj)
+SELECT '03 - INOVA SOLUÇÕES AMBIENTAIS', '333'
+    WHERE NOT EXISTS (SELECT 1 FROM filial WHERE cnpj = '333');

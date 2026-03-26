@@ -1,0 +1,57 @@
+.relatorios-container {
+  padding: 20px;
+}
+
+.filtros-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.filtros-container select {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.botoes {
+  display: flex;
+  gap: 10px;
+}
+
+.botoes button {
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #3b82f6;
+  color: white;
+  cursor: pointer;
+}
+
+.botoes button:hover {
+  background-color: #2563eb;
+}
+
+/* 📊 TABELA */
+.tabela-relatorios {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.tabela-relatorios th {
+  background: #f1f5f9;
+  text-align: left;
+  padding: 10px;
+}
+
+.tabela-relatorios td {
+  padding: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.tabela-relatorios tr:hover {
+  background: #f9fafb;
+}

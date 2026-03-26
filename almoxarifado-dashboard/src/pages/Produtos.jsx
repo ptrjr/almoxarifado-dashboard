@@ -1,0 +1,176 @@
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import api from "../services/api"
+
+function Produtos() {
+
+  const [produtos, setProdutos] = useState([])
+  const [busca, setBusca] = useState("")
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    carregarProdutos()
+  }, [])
+
+  async function carregarProdutos() {
+
+    try {
+
+      const response = await api.get("/produtos")
+
+      setProdutos(response.data)
+
+    } catch (error) {
+
+      console.error("Erro ao carregar produtos", error)
+
+    }
+
+  }
+
+  async function excluirProduto(id){
+
+    if(!window.confirm("Deseja excluir este produto?")){
+      return
+    }
+
+    try{
+
+      await api.delete(`/produtos/${id}`)
+
+      // remove da lista visual
+      setProdutos(produtos.filter(produto => produto.id !== id))
+
+    }catch(error){
+
+      console.error("Erro ao excluir produto", error)
+
+      if(error.response){
+        alert(error.response.data)
+      }else{
+        alert("Erro ao excluir produto")
+      }
+
+    }
+
+  }
+
+  function editarProduto(produto) {
+
+    navigate(`/produto/${produto.id}`)
+
+  }
+
+  function novoProduto() {
+
+    navigate("/novo-produto")
+
+  }
+
+  const produtosFiltrados = produtos.filter((produto) =>
+    (produto.nome || "").toLowerCase().includes(busca.toLowerCase())
+  )
+
+  return (
+
+    <div className="main-content">
+
+      <div className="page-header">
+
+        <h1>📦 Produtos</h1>
+
+        <button className="btn-primary" onClick={novoProduto}>
+          + Novo Produto
+        </button>
+
+      </div>
+
+      <div className="search-box">
+
+        <input
+          type="text"
+          placeholder="Buscar produto..."
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+        />
+
+      </div>
+
+      <table className="table">
+
+        <thead>
+
+          <tr>
+            <th>Nome</th>
+            <th>Estoque atual</th>
+            <th>Estoque mínimo</th>
+            <th>Categoria</th>
+            <th>Ações</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          {produtosFiltrados.map((produto) => {
+
+            const estoqueAtual = produto.estoqueAtual ?? 0
+            const estoqueMinimo = produto.estoqueMinimo ?? 0
+            const unidade = produto.unidadeMedida ?? ""
+
+            return (
+
+              <tr key={produto.id}>
+
+                <td>{produto.nome}</td>
+
+                <td
+                  className={
+                    estoqueAtual <= estoqueMinimo
+                    ? "estoque-baixo"
+                    : ""
+                  }
+                >
+                  {estoqueAtual <= estoqueMinimo && "⚠️ "}
+                  {estoqueAtual} {unidade}
+                </td>
+
+                <td>{estoqueMinimo}</td>
+
+                <td>{produto.categoria}</td>
+
+                <td>
+
+                  <button
+                    className="btn-edit"
+                    onClick={() => editarProduto(produto)}
+                  >
+                    ✏️
+                  </button>
+
+                  <button
+                    className="btn-delete"
+                    onClick={() => excluirProduto(produto.id)}
+                  >
+                    🗑
+                  </button>
+
+                </td>
+
+              </tr>
+
+            )
+
+          })}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  )
+
+}
+
+export default Produtos
