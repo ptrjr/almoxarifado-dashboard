@@ -16,10 +16,9 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
 
                 registry.addMapping("/**")
-                        .allowedOriginPatterns(
+                        .allowedOrigins(
                                 "http://localhost:5173",
-                                "http://192.168.0.87:5173",
-                                "https://*.vercel.app" // 🔥 pega TODOS deploys da Vercel
+                                "https://almoxarifado-dashboard.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
