@@ -25,18 +25,20 @@ public class AlertaService {
 
         for (Produto produto : produtos) {
 
-            if (produto.getEstoqueAtual() <= produto.getEstoqueMinimo()) {
+            Integer atual = produto.getEstoqueAtual();
+            Integer minimo = produto.getEstoqueMinimo();
+
+            if (atual != null && minimo != null && atual <= minimo) {
 
                 alertas.add(
                         new AlertaEstoqueDTO(
-                                produto.getNome(),
-                                produto.getEstoqueAtual(),
-                                produto.getEstoqueMinimo()
+                                produto.getNome() != null ? produto.getNome() : "Sem nome",
+                                atual,
+                                minimo
                         )
                 );
 
             }
-
         }
 
         return alertas;
