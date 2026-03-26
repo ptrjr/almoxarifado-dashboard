@@ -19,4 +19,11 @@ public interface SaidaRepository extends JpaRepository<Saida, Long> {
     @Query("SELECT s FROM Saida s WHERE (:filialId IS NULL OR s.filial.id = :filialId)")
     List<Saida> findByFilialId(@Param("filialId") Long filialId);
 
+    @Query("""
+    SELECT s.produtoId, SUM(s.quantidade)
+    FROM Saida s
+    GROUP BY s.produtoId
+""")
+    List<Object[]> somarSaidasPorProduto();
+
 }

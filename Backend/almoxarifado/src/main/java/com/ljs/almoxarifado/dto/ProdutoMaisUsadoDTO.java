@@ -2,23 +2,22 @@ package com.ljs.almoxarifado.dto;
 
 public class ProdutoMaisUsadoDTO {
 
-    private Long produtoId;
+    private String nome;
     private Integer quantidade;
 
-    public ProdutoMaisUsadoDTO() {
-    }
+    public ProdutoMaisUsadoDTO() {}
 
-    public ProdutoMaisUsadoDTO(Long produtoId, Integer quantidade) {
-        this.produtoId = produtoId;
+    public ProdutoMaisUsadoDTO(String nome, Integer quantidade) {
+        this.nome = nome;
         this.quantidade = quantidade;
     }
 
-    public Long getProdutoId() {
-        return produtoId;
+    public String getNome() {
+        return nome;
     }
 
-    public void setProdutoId(Long produtoId) {
-        this.produtoId = produtoId;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public Integer getQuantidade() {
