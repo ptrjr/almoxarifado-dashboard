@@ -22,7 +22,8 @@ public class CorsConfig {
                                 "https://almoxarifado-dashboard.vercel.app"
                         )
                         .allowedMethods("*")
-                        .allowedHeaders("*");
+                        .allowedHeaders("*")
+                        .allowCredentials(true); // 🔥 ESSA LINHA É CRUCIAL
             }
         };
     }
