@@ -13,7 +13,7 @@ public interface EntradaRepository extends JpaRepository<Entrada, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM entradas WHERE produto_id = ?1", nativeQuery = true)
+    @Query(value = "DELETE FROM entrada WHERE produto_id = ?1", nativeQuery = true)
     void deleteByProdutoId(Long produtoId);
 
     @Query("SELECT e FROM Entrada e WHERE (:filialId IS NULL OR e.filial.id = :filialId)")
