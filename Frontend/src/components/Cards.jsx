@@ -21,12 +21,19 @@ function Cards() {
       const entradasRes = await api.get("/entradas");
       const saidasRes = await api.get("/saidas");
 
-      setTotalProdutos(produtosRes.data.length);
-      setTotalEntradas(entradasRes.data.length);
-      setTotalSaidas(saidasRes.data.length);
+      console.log("produtos:", produtosRes.data); // debug
 
-      const baixoEstoque = produtosRes.data.filter(produto =>
-        produto.estoqueAtual <= produto.estoqueMinimo
+      // 🔥 proteção total
+      const produtos = Array.isArray(produtosRes.data) ? produtosRes.data : [];
+      const entradas = Array.isArray(entradasRes.data) ? entradasRes.data : [];
+      const saidas = Array.isArray(saidasRes.data) ? saidasRes.data : [];
+
+      setTotalProdutos(produtos.length);
+      setTotalEntradas(entradas.length);
+      setTotalSaidas(saidas.length);
+
+      const baixoEstoque = produtos.filter(produto =>
+        (produto.estoqueAtual ?? 0) <= (produto.estoqueMinimo ?? 0)
       );
 
       setEstoqueBaixo(baixoEstoque.length);
@@ -34,6 +41,12 @@ function Cards() {
     } catch (error) {
 
       console.error("Erro ao carregar dashboard", error);
+
+      // fallback
+      setTotalProdutos(0);
+      setTotalEntradas(0);
+      setTotalSaidas(0);
+      setEstoqueBaixo(0);
 
     } finally {
 

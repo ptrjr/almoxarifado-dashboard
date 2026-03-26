@@ -12,25 +12,30 @@ function GraficoConsumo() {
   useEffect(() => {
     api.get("/estatisticas/mais-usados")
       .then(res => {
+        console.log("dados grafico:", res.data); // debug
         setDados(res.data);
       })
       .catch(err => {
         console.error("Erro ao carregar gráfico", err);
+        setDados([]); // evita quebrar
       });
   }, []);
 
+  // 🔥 proteção contra erro
+  const lista = Array.isArray(dados) ? dados : [];
+
   const data = {
-    labels: dados.map(d => d.nome), // 🔥 melhor que produto_id
+    labels: lista.map(d => d.nome),
     datasets: [
       {
         label: "Quantidade utilizada",
-        data: dados.map(d => d.totalSaida)
+        data: lista.map(d => d.totalSaida)
       }
     ]
   };
 
   return (
-    <div style={{width:"600px", marginTop:"40px"}}>
+    <div style={{ width: "600px", marginTop: "40px" }}>
       <h2>Produtos mais utilizados</h2>
       <Bar data={data} />
     </div>
