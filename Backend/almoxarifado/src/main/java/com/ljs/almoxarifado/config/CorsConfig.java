@@ -16,14 +16,14 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
 
                 registry.addMapping("/**")
-                        .allowedOrigins(
+                        .allowedOriginPatterns(
                                 "http://localhost:5173",
                                 "http://192.168.0.87:5173",
-                                "https://almoxarifado-dashboard.vercel.app"
+                                "https://*.vercel.app" // 🔥 pega TODOS deploys da Vercel
                         )
-                        .allowedMethods("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true); // 🔥 ESSA LINHA É CRUCIAL
+                        .allowCredentials(true);
             }
         };
     }
