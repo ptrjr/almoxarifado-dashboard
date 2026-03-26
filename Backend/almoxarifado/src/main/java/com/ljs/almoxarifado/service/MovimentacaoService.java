@@ -35,7 +35,54 @@ public class MovimentacaoService {
         this.filialRepository = filialRepository;
     }
 
-    // 🔹 LISTAR TODAS OU FILTRAR POR EMPRESA (FILIAL)
+    // 🔥 CRIAR MOVIMENTAÇÃO (CORRIGIDO)
+    public void criarMovimentacao(MovimentacaoDTO dto) {
+
+        Filial filial = filialRepository.findById(dto.getFilialId())
+                .orElseThrow(() -> new RuntimeException("Filial não encontrada"));
+
+        Produto produto = produtoRepository.findById(dto.getProdutoId())
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        // 🔥 evita null
+        Integer estoqueAtualObj = produto.getEstoqueAtual();
+        int estoqueAtual = (estoqueAtualObj == null) ? 0 : estoqueAtualObj;
+
+        if ("ENTRADA".equalsIgnoreCase(dto.getTipo())) {
+
+            Entrada entrada = new Entrada();
+            entrada.setProdutoId(dto.getProdutoId());
+            entrada.setQuantidade(dto.getQuantidade());
+            entrada.setDataEntrada(dto.getData());
+            entrada.setFilial(filial);
+
+            entradaRepository.save(entrada);
+
+            produto.setEstoqueAtual(estoqueAtual + dto.getQuantidade());
+
+            produtoRepository.save(produto);
+
+        } else if ("SAIDA".equalsIgnoreCase(dto.getTipo())) {
+
+            if (estoqueAtual < dto.getQuantidade()) {
+                throw new RuntimeException("Estoque insuficiente");
+            }
+
+            Saida saida = new Saida();
+            saida.setProdutoId(dto.getProdutoId());
+            saida.setQuantidade(dto.getQuantidade());
+            saida.setDataSaida(dto.getData());
+            saida.setFilial(filial);
+
+            saidaRepository.save(saida);
+
+            produto.setEstoqueAtual(estoqueAtual - dto.getQuantidade());
+
+            produtoRepository.save(produto);
+        }
+    }
+
+    // 🔥 LISTAR MOVIMENTAÇÕES
     public List<MovimentacaoDTO> listarMovimentacoes(Long filialId) {
 
         List<MovimentacaoDTO> lista = new ArrayList<>();
@@ -47,7 +94,6 @@ public class MovimentacaoService {
         for (Entrada e : entradas) {
 
             if (e.getProdutoId() == null) continue;
-
 
             Produto produto = produtoRepository
                     .findById(e.getProdutoId())
@@ -61,11 +107,6 @@ public class MovimentacaoService {
 
             if (s.getProdutoId() == null) continue;
 
-            if (filialId != null && s.getFilial() != null &&
-                    !s.getFilial().getId().equals(filialId)) {
-                continue;
-            }
-
             Produto produto = produtoRepository
                     .findById(s.getProdutoId())
                     .orElse(null);
@@ -73,7 +114,7 @@ public class MovimentacaoService {
             lista.add(montarDTOSaida(s, produto));
         }
 
-        // 🔥 ordenar por data (mais recente primeiro)
+        // 🔥 ordenar por data
         lista.sort((a, b) -> {
             if (a.getData() == null) return 1;
             if (b.getData() == null) return -1;
@@ -83,7 +124,7 @@ public class MovimentacaoService {
         return lista;
     }
 
-    // 🔹 MÉTODO AUXILIAR - ENTRADA
+    // 🔹 DTO ENTRADA
     private MovimentacaoDTO montarDTOEntrada(Entrada e, Produto produto) {
 
         MovimentacaoDTO dto = new MovimentacaoDTO();
@@ -98,12 +139,10 @@ public class MovimentacaoService {
         dto.setQuantidade(e.getQuantidade());
         dto.setData(e.getDataEntrada());
 
-        // 🔥 UNIDADE DE MEDIDA
         if (produto != null) {
             dto.setUnidadeMedida(produto.getUnidadeMedida());
         }
 
-        // 🔥 EMPRESA (FILIAL)
         if (e.getFilial() != null) {
             dto.setFilialId(e.getFilial().getId());
             dto.setFilialNome(e.getFilial().getNome());
@@ -113,7 +152,7 @@ public class MovimentacaoService {
         return dto;
     }
 
-    // 🔹 MÉTODO AUXILIAR - SAÍDA
+    // 🔹 DTO SAÍDA
     private MovimentacaoDTO montarDTOSaida(Saida s, Produto produto) {
 
         MovimentacaoDTO dto = new MovimentacaoDTO();
@@ -128,12 +167,10 @@ public class MovimentacaoService {
         dto.setQuantidade(s.getQuantidade());
         dto.setData(s.getDataSaida());
 
-        // 🔥 UNIDADE DE MEDIDA
         if (produto != null) {
             dto.setUnidadeMedida(produto.getUnidadeMedida());
         }
 
-        // 🔥 EMPRESA (FILIAL)
         if (s.getFilial() != null) {
             dto.setFilialId(s.getFilial().getId());
             dto.setFilialNome(s.getFilial().getNome());
@@ -141,52 +178,5 @@ public class MovimentacaoService {
         }
 
         return dto;
-    }
-
-    // 🔥 CRIAR MOVIMENTAÇÃO + ATUALIZAR ESTOQUE
-    public void criarMovimentacao(MovimentacaoDTO dto) {
-
-        Filial filial = filialRepository.findById(dto.getFilialId())
-                .orElseThrow(() -> new RuntimeException("Filial não encontrada"));
-
-        Produto produto = produtoRepository.findById(dto.getProdutoId())
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-        if ("ENTRADA".equalsIgnoreCase(dto.getTipo())) {
-
-            Entrada entrada = new Entrada();
-            entrada.setProdutoId(dto.getProdutoId());
-            entrada.setQuantidade(dto.getQuantidade());
-            entrada.setDataEntrada(dto.getData());
-            entrada.setFilial(filial);
-
-            entradaRepository.save(entrada);
-
-            produto.setEstoqueAtual(
-                    produto.getEstoqueAtual() + dto.getQuantidade()
-            );
-
-            produtoRepository.save(produto);
-
-        } else if ("SAIDA".equalsIgnoreCase(dto.getTipo())) {
-
-            if (produto.getEstoqueAtual() < dto.getQuantidade()) {
-                throw new RuntimeException("Estoque insuficiente");
-            }
-
-            Saida saida = new Saida();
-            saida.setProdutoId(dto.getProdutoId());
-            saida.setQuantidade(dto.getQuantidade());
-            saida.setDataSaida(dto.getData());
-            saida.setFilial(filial);
-
-            saidaRepository.save(saida);
-
-            produto.setEstoqueAtual(
-                    produto.getEstoqueAtual() - dto.getQuantidade()
-            );
-
-            produtoRepository.save(produto);
-        }
     }
 }
