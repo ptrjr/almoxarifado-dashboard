@@ -2,6 +2,8 @@ import SaidaProduto from "../components/SaidaProduto";
 
 function Saidas(){
 
+  const token = localStorage.getItem("token")
+
   return(
 
     <div>
