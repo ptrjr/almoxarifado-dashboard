@@ -15,16 +15,20 @@ function NovoProduto(){
   const token = localStorage.getItem("token")
 
   useEffect(() => {
+
+    // 🔒 bloqueia acesso direto
     if(!token){
       alert("Faça login para criar produtos")
       navigate("/login")
     }
-  }, [])
+
+  }, [token, navigate]) // 🔥 ajuste importante
 
   async function salvarProduto(e){
 
     e.preventDefault()
 
+    // 🔐 proteção extra
     if(!token){
       alert("Faça login para salvar")
       return
@@ -45,6 +49,7 @@ function NovoProduto(){
 
     }catch(error){
       console.error("Erro ao salvar produto", error)
+      alert("Erro ao salvar produto")
     }
 
   }
@@ -55,6 +60,7 @@ function NovoProduto(){
 
       <h2>Novo Produto</h2>
 
+      {/* 🔓 aviso visitante */}
       {!token && (
         <p style={{ color: "orange" }}>
           Você está em modo visitante
@@ -63,16 +69,22 @@ function NovoProduto(){
 
       <form onSubmit={salvarProduto} className="form-container">
 
-        {/* campos iguais */}
-
         <div className="form-group">
           <label>Nome</label>
-          <input value={nome} onChange={(e)=>setNome(e.target.value)} required />
+          <input
+            value={nome}
+            onChange={(e)=>setNome(e.target.value)}
+            required
+          />
         </div>
 
         <div className="form-group">
           <label>Categoria</label>
-          <select value={categoria} onChange={(e)=>setCategoria(e.target.value)} required>
+          <select
+            value={categoria}
+            onChange={(e)=>setCategoria(e.target.value)}
+            required
+          >
             <option value="">Selecione</option>
             <option value="Obras">Obras</option>
             <option value="Irrigação">Irrigação</option>
@@ -82,7 +94,11 @@ function NovoProduto(){
 
         <div className="form-group">
           <label>Unidade de Medida</label>
-          <select value={unidadeMedida} onChange={(e)=>setUnidadeMedida(e.target.value)} required>
+          <select
+            value={unidadeMedida}
+            onChange={(e)=>setUnidadeMedida(e.target.value)}
+            required
+          >
             <option value="">Selecione</option>
             <option value="Caixa">Caixa</option>
             <option value="Fardo">Fardo</option>
@@ -101,12 +117,22 @@ function NovoProduto(){
 
         <div className="form-group">
           <label>Estoque Atual</label>
-          <input type="number" value={estoqueAtual} onChange={(e)=>setEstoqueAtual(e.target.value)} required />
+          <input
+            type="number"
+            value={estoqueAtual}
+            onChange={(e)=>setEstoqueAtual(e.target.value)}
+            required
+          />
         </div>
 
         <div className="form-group">
           <label>Estoque Mínimo</label>
-          <input type="number" value={estoqueMinimo} onChange={(e)=>setEstoqueMinimo(e.target.value)} required />
+          <input
+            type="number"
+            value={estoqueMinimo}
+            onChange={(e)=>setEstoqueMinimo(e.target.value)}
+            required
+          />
         </div>
 
         {/* 🔐 botão só aparece logado */}
