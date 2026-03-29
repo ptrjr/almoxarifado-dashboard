@@ -10,6 +10,8 @@ function EntradaProduto() {
   const [quantidade, setQuantidade] = useState("")
   const [filialId, setFilialId] = useState("")
 
+  const token = localStorage.getItem("token")
+
   useEffect(() => {
     carregarProdutos()
     carregarFiliais()
@@ -42,6 +44,12 @@ function EntradaProduto() {
 
     e.preventDefault()
 
+    // 🔒 BLOQUEIO VISITANTE
+    if (!token) {
+      alert("Faça login para registrar entradas")
+      return
+    }
+
     if (!produtoId) return alert("Selecione um produto")
     if (!quantidade || quantidade <= 0) return alert("Quantidade inválida")
     if (!filialId) return alert("Selecione a empresa")
@@ -67,7 +75,7 @@ function EntradaProduto() {
     } catch (error) {
 
       console.error(error)
-      alert(JSON.stringify(error.response?.data))
+      alert("Erro ao registrar entrada")
 
     }
   }
@@ -78,10 +86,21 @@ function EntradaProduto() {
 
       <h2>📥 Registrar Entrada</h2>
 
+      {/* 🔓 AVISO VISITANTE */}
+      {!token && (
+        <p style={{ color: "orange" }}>
+          Você está em modo visitante. Faça login para registrar entradas.
+        </p>
+      )}
+
       <form onSubmit={registrarEntrada}>
 
         <label>Produto</label><br />
-        <select value={produtoId} onChange={(e) => setProdutoId(e.target.value)}>
+        <select
+          value={produtoId}
+          onChange={(e) => setProdutoId(e.target.value)}
+          disabled={!token} // 🔒 bloqueia interação
+        >
           <option value="">Selecione um produto</option>
           {produtos.map(p => (
             <option key={p.id} value={p.id}>{p.nome}</option>
@@ -95,12 +114,17 @@ function EntradaProduto() {
           type="number"
           value={quantidade}
           onChange={(e) => setQuantidade(e.target.value)}
+          disabled={!token} // 🔒 bloqueia interação
         />
 
         <br /><br />
 
         <label>Empresa (CNPJ)</label><br />
-        <select value={filialId} onChange={(e) => setFilialId(e.target.value)}>
+        <select
+          value={filialId}
+          onChange={(e) => setFilialId(e.target.value)}
+          disabled={!token} // 🔒 bloqueia interação
+        >
           <option value="">Selecione a empresa</option>
           {filiais.map(f => (
             <option key={f.id} value={f.id}>{f.nome}</option>
@@ -109,7 +133,10 @@ function EntradaProduto() {
 
         <br /><br />
 
-        <button type="submit">Registrar</button>
+        {/* 🔐 BOTÃO SÓ PARA LOGADO */}
+        {token && (
+          <button type="submit">Registrar</button>
+        )}
 
       </form>
 
