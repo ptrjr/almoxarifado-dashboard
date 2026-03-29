@@ -22,7 +22,7 @@ public class AuthController {
         String senha = body.get("senha");
 
         // LOGIN FIXO (simples por enquanto)
-        if (!"admin@admin.com".equals(email) || !"123456".equals(senha)) {
+        if (!"rh@ljs.com.br".equals(email) || !"32270229".equals(senha)) {
             throw new RuntimeException("Credenciais inválidas");
         }
 
