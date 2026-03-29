@@ -12,8 +12,20 @@ function EditarProduto(){
   const [estoqueAtual, setEstoqueAtual] = useState(0)
   const [estoqueMinimo, setEstoqueMinimo] = useState(0)
 
+  // 🔐 verifica login
+  const token = localStorage.getItem("token")
+
   useEffect(() => {
+
+    // 🔒 bloqueia acesso direto pela URL
+    if(!token){
+      alert("Faça login para editar produtos")
+      navigate("/login")
+      return
+    }
+
     carregarProduto()
+
   }, [])
 
   async function carregarProduto(){
@@ -41,6 +53,12 @@ function EditarProduto(){
 
     e.preventDefault()
 
+    // 🔒 proteção extra
+    if(!token){
+      alert("Faça login para salvar alterações")
+      return
+    }
+
     try{
 
       await api.put(`/produtos/${id}`, {
@@ -65,6 +83,13 @@ function EditarProduto(){
     <div>
 
       <h2>Editar Produto</h2>
+
+      {/* 🔓 aviso visual */}
+      {!token && (
+        <p style={{ color: "orange" }}>
+          Você está em modo visitante
+        </p>
+      )}
 
       <form onSubmit={salvarProduto} className="form-container">
 

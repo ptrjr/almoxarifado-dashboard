@@ -8,27 +8,29 @@ function Produtos() {
   const [busca, setBusca] = useState("")
   const navigate = useNavigate()
 
+  // 🔐 verifica login
+  const token = localStorage.getItem("token")
+
   useEffect(() => {
     carregarProdutos()
   }, [])
 
   async function carregarProdutos() {
-
     try {
-
       const response = await api.get("/produtos")
-
       setProdutos(response.data)
-
     } catch (error) {
-
       console.error("Erro ao carregar produtos", error)
-
     }
-
   }
 
   async function excluirProduto(id){
+
+    // 🔒 bloqueio extra
+    if(!token){
+      alert("Faça login para excluir produtos")
+      return
+    }
 
     if(!window.confirm("Deseja excluir este produto?")){
       return
@@ -38,7 +40,6 @@ function Produtos() {
 
       await api.delete(`/produtos/${id}`)
 
-      // remove da lista visual
       setProdutos(produtos.filter(produto => produto.id !== id))
 
     }catch(error){
@@ -57,11 +58,21 @@ function Produtos() {
 
   function editarProduto(produto) {
 
+    if(!token){
+      alert("Faça login para editar produtos")
+      return
+    }
+
     navigate(`/produto/${produto.id}`)
 
   }
 
   function novoProduto() {
+
+    if(!token){
+      alert("Faça login para criar produtos")
+      return
+    }
 
     navigate("/novo-produto")
 
@@ -79,11 +90,21 @@ function Produtos() {
 
         <h1>📦 Produtos</h1>
 
-        <button className="btn-primary" onClick={novoProduto}>
-          + Novo Produto
-        </button>
+        {/* 🔐 botão só aparece se estiver logado */}
+        {token && (
+          <button className="btn-primary" onClick={novoProduto}>
+            + Novo Produto
+          </button>
+        )}
 
       </div>
+
+      {/* 🔓 aviso modo visitante */}
+      {!token && (
+        <p style={{ color: "orange", marginBottom: "10px" }}>
+          Você está em modo visitante. Faça login para editar.
+        </p>
+      )}
 
       <div className="search-box">
 
@@ -141,19 +162,24 @@ function Produtos() {
 
                 <td>
 
-                  <button
-                    className="btn-edit"
-                    onClick={() => editarProduto(produto)}
-                  >
-                    ✏️
-                  </button>
+                  {/* 🔐 só aparece se logado */}
+                  {token && (
+                    <>
+                      <button
+                        className="btn-edit"
+                        onClick={() => editarProduto(produto)}
+                      >
+                        ✏️
+                      </button>
 
-                  <button
-                    className="btn-delete"
-                    onClick={() => excluirProduto(produto.id)}
-                  >
-                    🗑
-                  </button>
+                      <button
+                        className="btn-delete"
+                        onClick={() => excluirProduto(produto.id)}
+                      >
+                        🗑
+                      </button>
+                    </>
+                  )}
 
                 </td>
 

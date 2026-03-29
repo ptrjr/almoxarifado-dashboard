@@ -1,5 +1,5 @@
 import Sidebar from "./components/Sidebar"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 
 import Dashboard from "./pages/Dashboard"
 import Produtos from "./pages/Produtos"
@@ -8,32 +8,59 @@ import Saidas from "./pages/Saidas"
 import Relatorios from "./pages/Relatorios"
 import NovoProduto from "./components/NovoProduto"
 import EditarProduto from "./components/EditarProduto"
+import Login from "./pages/Login"
 
-function App(){
+// 🔐 função para verificar login
+function PrivateRoute({ children }) {
+  const token = localStorage.getItem("token")
 
-  return(
+  if (!token) {
+    return <Navigate to="/login" />
+  }
+
+  return children
+}
+
+function App() {
+
+  return (
 
     <div className="app-layout">
 
-      <Sidebar/>
+      <Sidebar />
 
       <div className="main-content">
 
         <Routes>
 
-          <Route path="/" element={<Dashboard/>} />
+          {/* 🔓 rota pública */}
+          <Route path="/login" element={<Login />} />
 
-          <Route path="/produtos" element={<Produtos/>} />
+          {/* 🔓 VISUALIZAÇÃO LIBERADA */}
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/produtos" element={<Produtos />} />
+          <Route path="/entradas" element={<Entradas />} />
+          <Route path="/saidas" element={<Saidas />} />
+          <Route path="/relatorios" element={<Relatorios />} />
 
-          <Route path="/entradas" element={<Entradas/>} />
+          {/* 🔒 ROTAS PROTEGIDAS */}
+          <Route
+            path="/novo-produto"
+            element={
+              <PrivateRoute>
+                <NovoProduto />
+              </PrivateRoute>
+            }
+          />
 
-          <Route path="/saidas" element={<Saidas/>} />
-
-          <Route path="/relatorios" element={<Relatorios/>} />
-
-          <Route path="/novo-produto" element={<NovoProduto/>} />
-
-          <Route path="/produto/:id" element={<EditarProduto/>} />
+          <Route
+            path="/produto/:id"
+            element={
+              <PrivateRoute>
+                <EditarProduto />
+              </PrivateRoute>
+            }
+          />
 
         </Routes>
 
@@ -42,7 +69,6 @@ function App(){
     </div>
 
   )
-
 }
 
 export default App
