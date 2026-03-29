@@ -10,6 +10,8 @@ function SaidaProduto() {
   const [quantidade, setQuantidade] = useState("");
   const [filialId, setFilialId] = useState("");
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     carregarProdutos();
     carregarFiliais();
@@ -42,6 +44,12 @@ function SaidaProduto() {
 
     e.preventDefault();
 
+    // 🔐 BLOQUEIO FRONT
+    if (!token) {
+      alert("Faça login para registrar saídas");
+      return;
+    }
+
     if (!produtoId) return alert("Selecione um produto");
     if (!quantidade || quantidade <= 0) return alert("Quantidade inválida");
     if (!filialId) return alert("Selecione a empresa");
@@ -67,7 +75,7 @@ function SaidaProduto() {
     } catch (error) {
 
       console.error(error);
-      alert(JSON.stringify(error.response?.data));
+      alert("Erro ao registrar saída");
 
     }
   }
@@ -77,6 +85,12 @@ function SaidaProduto() {
     <div style={{ marginTop: "40px" }}>
 
       <h2>📤 Registrar Saída</h2>
+
+      {!token && (
+        <p style={{ color: "orange" }}>
+          Você está em modo visitante. Faça login para registrar saídas.
+        </p>
+      )}
 
       <form onSubmit={registrarSaida}>
 
@@ -109,7 +123,10 @@ function SaidaProduto() {
 
         <br /><br />
 
-        <button type="submit">Registrar</button>
+        {/* 🔐 botão só aparece logado */}
+        {token && (
+          <button type="submit">Registrar</button>
+        )}
 
       </form>
 
