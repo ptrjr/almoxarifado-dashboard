@@ -84,15 +84,6 @@ function EntradaProduto() {
 
     <div style={{ marginTop: "40px" }}>
 
-      <h2>📥 Registrar Entrada</h2>
-
-      {/* 🔓 AVISO VISITANTE */}
-      {!token && (
-        <p style={{ color: "orange" }}>
-          Você está em modo visitante. Faça login para registrar entradas.
-        </p>
-      )}
-
       <form onSubmit={registrarEntrada}>
 
         <label>Produto</label><br />

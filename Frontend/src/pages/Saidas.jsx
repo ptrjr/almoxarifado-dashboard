@@ -6,7 +6,13 @@ function Saidas(){
 
     <div>
 
-      <h1>Saídas de estoque</h1>
+      <h1>📤Saídas de estoque</h1>
+
+      {!token && (
+        <p style={{ color: "orange" }}>
+          Você está em modo visitante. Faça login para registrar saídas.
+        </p>
+      )}
 
       <SaidaProduto />
 

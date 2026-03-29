@@ -84,14 +84,6 @@ function SaidaProduto() {
 
     <div style={{ marginTop: "40px" }}>
 
-      <h2>📤 Registrar Saída</h2>
-
-      {!token && (
-        <p style={{ color: "orange" }}>
-          Você está em modo visitante. Faça login para registrar saídas.
-        </p>
-      )}
-
       <form onSubmit={registrarSaida}>
 
         <label>Produto</label><br />
