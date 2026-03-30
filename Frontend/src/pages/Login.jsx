@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 function Login() {
 
@@ -8,7 +8,7 @@ function Login() {
 
   const fazerLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", {
+      const response = await api.post("/auth/login", {
         email,
         senha
       });
@@ -22,6 +22,7 @@ function Login() {
       window.location.href = "/";
 
     } catch (error) {
+      console.error(error);
       alert("Login inválido");
     }
   };
@@ -32,6 +33,7 @@ function Login() {
 
       <input
         placeholder="Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
 
@@ -40,12 +42,15 @@ function Login() {
       <input
         type="password"
         placeholder="Senha"
+        value={senha}
         onChange={(e) => setSenha(e.target.value)}
       />
 
       <br /><br />
 
-      <button onClick={fazerLogin}>Entrar</button>
+      <button onClick={fazerLogin}>
+        Entrar
+      </button>
     </div>
   );
 }
