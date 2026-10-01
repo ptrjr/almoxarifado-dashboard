@@ -1,4 +1,5 @@
 # Almoxarifado Dashboard
+## Projeto de estudo desenvolvido com Java, Spring Boot, React e PostgreSQL. O ambiente hospedado foi desativado. O projeto está incompleto e permanece disponível como registro de aprendizado.
 Aplicação web para controle de estoque, desenvolvida a partir de necessidades observadas na rotina profissional. O projeto reúne uma API em Java com Spring Boot e uma interface em React para acompanhar produtos, entradas, saídas e movimentações de materiais.
 Objetivo
 Praticar desenvolvimento de uma aplicação com frontend e backend a partir de um problema real: organizar o registro de materiais e facilitar a consulta do estoque e de suas movimentações.
