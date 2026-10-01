@@ -1,4 +1,4 @@
-Almoxarifado Dashboard
+# Almoxarifado Dashboard
 Status: projeto de estudo incompleto, sem hospedagem ativa.
 O ambiente hospedado foi desativado. O código permanece disponível como registro de aprendizado com Java, Spring Boot, React e PostgreSQL. O roteiro de execução local abaixo ainda precisa ser validado após a desativação do ambiente.
 Aplicação web para controle de estoque, desenvolvida a partir de necessidades observadas na rotina profissional. O projeto reúne uma API em Java com Spring Boot e uma interface em React para acompanhar produtos, entradas, saídas e movimentações de materiais.
