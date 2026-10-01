@@ -1,5 +1,6 @@
-# Almoxarifado Dashboard
-## Projeto de estudo desenvolvido com Java, Spring Boot, React e PostgreSQL. O ambiente hospedado foi desativado. O projeto está incompleto e permanece disponível como registro de aprendizado.
+Almoxarifado Dashboard
+Status: projeto de estudo incompleto, sem hospedagem ativa.
+O ambiente hospedado foi desativado. O código permanece disponível como registro de aprendizado com Java, Spring Boot, React e PostgreSQL. O roteiro de execução local abaixo ainda precisa ser validado após a desativação do ambiente.
 Aplicação web para controle de estoque, desenvolvida a partir de necessidades observadas na rotina profissional. O projeto reúne uma API em Java com Spring Boot e uma interface em React para acompanhar produtos, entradas, saídas e movimentações de materiais.
 Objetivo
 Praticar desenvolvimento de uma aplicação com frontend e backend a partir de um problema real: organizar o registro de materiais e facilitar a consulta do estoque e de suas movimentações.
@@ -107,9 +108,9 @@ Na pasta Backend/almoxarifado, para gerar o pacote:
 # Linux / macOS
 sh ./mvnw package
 Esses comandos estão documentados a partir da configuração do repositório. Este README não afirma que existe uma suíte de testes automatizados ou que todos os fluxos foram validados.
-Limitações atuais e próximos passos
+Limitações atuais e possíveis melhorias
 - Evoluir o login demonstrativo para autenticação com usuários persistidos e senhas com hash.
-- Externalizar completamente configurações de banco, JWT e URL da API.
+- Concluir a externalização de configurações de JWT e URL da API; as credenciais do banco já utilizam variáveis de ambiente.
 - Revisar autorização e exposição de dados antes de uso com informações reais.
 - Adicionar testes para estoque, entradas, saídas e permissões.
 - Incluir imagens e uma demonstração com dados fictícios.
